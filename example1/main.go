@@ -17,8 +17,8 @@ func main() {
 	))
 	w, h := float64(d.Width()), float64(d.Height())
 	d.Render(func() {
-		d.Canvas.Clear()
-		d.Canvas.SetRGBA255(255, 0, 0, 16)
+		d.Canvas.Background(255)
+		d.Canvas.FillRGBA255(255, 0, 0, 16)
 		for i := 0; i < 360; i += 15 {
 			d.Canvas.Push()
 			d.Canvas.RotateAbout(drawlib.ToRadians(float64(i)), w/2, h/2)

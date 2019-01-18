@@ -424,30 +424,29 @@ func (c *Canvas) StrokePreserve() *Canvas {
 	return c
 }
 
-// arg 1 for gray color,
-// arg 3 for rgb color,
-// arg 4 for rgba color
-func (c *Canvas) Stroke(i ...interface{}) *Canvas {
-	switch len(i) {
-	case 1:
-		v := i[0].(int)
-		c.SetRGB255(v, v, v)
-	case 3:
-		if v, ok := i[0].(int); ok {
-			c.SetRGB255(v, i[1].(int), i[2].(int))
-		} else {
-			c.SetRGB(i[0].(float64), i[1].(float64), i[2].(float64))
-		}
-	case 4:
-		if v, ok := i[0].(int); ok {
-			c.SetRGBA255(v, i[1].(int), i[2].(int), i[3].(int))
-		} else {
-			c.SetRGBA(i[0].(float64), i[1].(float64), i[2].(float64), i[3].(float64))
-		}
-	}
+func (c *Canvas) Stroke() {
 	c.StrokePreserve()
 	c.ClearPath()
-	return c
+}
+
+func (c *Canvas) StrokeRGB(r, g, b float64) {
+	c.SetRGB(r, g, b)
+	c.Stroke()
+}
+
+func (c *Canvas) StrokeRGBA(r, g, b, a float64) {
+	c.SetRGBA(r, g, b, a)
+	c.Stroke()
+}
+
+func (c *Canvas) StrokeRGB255(r, g, b int) {
+	c.SetRGB255(r, g, b)
+	c.Stroke()
+}
+
+func (c *Canvas) StrokeRGBA255(r, g, b, a int) {
+	c.SetRGBA255(r, g, b, a)
+	c.Stroke()
 }
 
 func (c *Canvas) FillPreserve() *Canvas {
@@ -466,30 +465,29 @@ func (c *Canvas) FillPreserve() *Canvas {
 	return c
 }
 
-// arg 1 for gray color,
-// arg 3 for rgb color,
-// arg 4 for rgba color
-func (c *Canvas) Fill(i ...interface{}) *Canvas {
-	switch len(i) {
-	case 1:
-		v := i[0].(int)
-		c.SetRGB255(v, v, v)
-	case 3:
-		if v, ok := i[0].(int); ok {
-			c.SetRGB255(v, i[1].(int), i[2].(int))
-		} else {
-			c.SetRGB(i[0].(float64), i[1].(float64), i[2].(float64))
-		}
-	case 4:
-		if v, ok := i[0].(int); ok {
-			c.SetRGBA255(v, i[1].(int), i[2].(int), i[3].(int))
-		} else {
-			c.SetRGBA(i[0].(float64), i[1].(float64), i[2].(float64), i[3].(float64))
-		}
-	}
+func (c *Canvas) Fill() {
 	c.FillPreserve()
 	c.ClearPath()
-	return c
+}
+
+func (c *Canvas) FillRGB(r, g, b float64) {
+	c.SetRGB(r, g, b)
+	c.Fill()
+}
+
+func (c *Canvas) FillRGBA(r, g, b, a float64) {
+	c.SetRGBA(r, g, b, a)
+	c.Fill()
+}
+
+func (c *Canvas) FillRGB255(r, g, b int) {
+	c.SetRGB255(r, g, b)
+	c.Fill()
+}
+
+func (c *Canvas) FillRGBA255(r, g, b, a int) {
+	c.SetRGBA255(r, g, b, a)
+	c.Fill()
 }
 
 func (c *Canvas) ClipPreserve() *Canvas {
@@ -565,6 +563,15 @@ func (c *Canvas) SetClearColor(i ...interface{}) *Canvas {
 		}
 	}
 	c.clearSrc = image.NewUniform(col)
+	return c
+}
+
+// arg 1 for gray color,
+// arg 3 for rgb color,
+// arg 4 for rgba color
+func (c *Canvas) Background(i ...interface{}) *Canvas {
+	c.SetClearColor(i...)
+	c.Clear()
 	return c
 }
 

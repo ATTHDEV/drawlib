@@ -13,7 +13,6 @@ import (
 	"golang.org/x/mobile/event/key"
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/mouse"
-	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
 )
 
@@ -137,7 +136,7 @@ func New(o ...*screen.WindowOptions) *Drawlib {
 		options = o[0]
 	} else {
 		options = screen.NewWindowOptions(
-			screen.Title("Drawlib windows"),
+			screen.Title("Drawlib Windows"),
 			screen.Dimensions(600, 600),
 		)
 	}
@@ -277,54 +276,58 @@ func (d *Drawlib) eventLoop() {
 					(*d.mouseMoveCallback)(int(e.X), int(e.Y))
 				}
 			}
-		case paint.Event:
-			// if d.renderCallback != nil {
-			// 	(*d.renderCallback)()
-			// }
+		//case paint.Event:
+		// if d.renderCallback != nil {
+		// 	(*d.renderCallback)()
+		// }
 		case size.Event:
-			// d.mutex.Lock()
-			// size := e.Size()
-			// d.options.Width = size.X
-			// d.options.Height = size.Y
-			// //fmt.Println(d.config.Width, d.config.Height)
-			// if d.autoscale {
-			// 	d.rect = e.Bounds()
-			// } else {
-			// 	// update canvas position
-			// 	w := d.Canvas.Width()
-			// 	h := d.Canvas.Height()
-			// 	if size.X >= w && size.Y >= h {
-			// 		offsetX := (size.X - d.Canvas.Width()) / 2
-			// 		offsetY := (size.Y - d.Canvas.Height()) / 2
-			// 		offsetW := offsetX + d.Canvas.Width()
-			// 		offsetH := offsetY + d.Canvas.Height()
-			// 		d.window.Fill(image.Rect(0, 0, offsetX, size.Y), defaultWindowsBackground, draw.Src)
-			// 		d.window.Fill(image.Rect(offsetW, 0, size.X, size.Y), defaultWindowsBackground, draw.Src)
-			// 		d.window.Fill(image.Rect(0, 0, size.X, offsetY), defaultWindowsBackground, draw.Src)
-			// 		d.window.Fill(image.Rect(0, offsetH, size.X, size.Y), defaultWindowsBackground, draw.Src)
-			// 		d.rect = image.Rect(offsetX, offsetY, offsetW, offsetH)
+			size := e.Size()
+			d.options.Width = size.X
+			d.options.Height = size.Y
+			if d.autoscale {
+				d.mutex.Lock()
+				d.rect = e.Bounds()
+				d.mutex.Unlock()
+			} else {
+				// update canvas position
+				w := d.Canvas.Width()
+				h := d.Canvas.Height()
+				if size.X >= w && size.Y >= h {
+					offsetX := (size.X - d.Canvas.Width()) / 2
+					offsetY := (size.Y - d.Canvas.Height()) / 2
+					offsetW := offsetX + d.Canvas.Width()
+					offsetH := offsetY + d.Canvas.Height()
+					d.window.Fill(image.Rect(0, 0, offsetX, size.Y), defaultWindowsBackground, draw.Src)
+					d.window.Fill(image.Rect(offsetW, 0, size.X, size.Y), defaultWindowsBackground, draw.Src)
+					d.window.Fill(image.Rect(0, 0, size.X, offsetY), defaultWindowsBackground, draw.Src)
+					d.window.Fill(image.Rect(0, offsetH, size.X, size.Y), defaultWindowsBackground, draw.Src)
+					d.rect = image.Rect(offsetX, offsetY, offsetW, offsetH)
 
-			// 	} else if size.X < w || size.Y < h {
-			// 		if size.X < size.Y {
-			// 			offsetY := (size.Y-h)/2 + (w-size.X)/2
-			// 			offsetX := offsetY + size.X
-			// 			d.window.Fill(image.Rect(0, 0, size.X, offsetY), defaultWindowsBackground, draw.Src)
-			// 			d.window.Fill(image.Rect(0, offsetX, size.X, size.Y), defaultWindowsBackground, draw.Src)
-			// 			d.rect = image.Rect(0, offsetY, size.X, offsetX)
+				} else if size.X < w || size.Y < h {
+					if size.X < size.Y {
+						offsetY := (size.Y-h)/2 + (w-size.X)/2
+						offsetX := offsetY + size.X
+						d.mutex.Lock()
+						d.window.Fill(image.Rect(0, 0, size.X, offsetY), defaultWindowsBackground, draw.Src)
+						d.window.Fill(image.Rect(0, offsetX, size.X, size.Y), defaultWindowsBackground, draw.Src)
+						d.rect = image.Rect(0, offsetY, size.X, offsetX)
+						d.mutex.Unlock()
 
-			// 		} else {
-			// 			offsetX := (size.X-w)/2 + (h-size.Y)/2
-			// 			offsetY := offsetX + size.Y
-			// 			d.window.Fill(image.Rect(0, 0, offsetX, size.Y), defaultWindowsBackground, draw.Src)
-			// 			d.window.Fill(image.Rect(offsetY, 0, size.X, size.Y), defaultWindowsBackground, draw.Src)
-			// 			d.rect = image.Rect(offsetX, 0, offsetY, size.Y)
-			// 		}
-			// 	}
-			// }
-			// if d.sizeCallback != nil {
-			// 	(*d.sizeCallback)(size.X, size.Y)
-			// }
-			// d.mutex.Unlock()
+					} else {
+						offsetX := (size.X-w)/2 + (h-size.Y)/2
+						offsetY := offsetX + size.Y
+						d.mutex.Lock()
+						d.window.Fill(image.Rect(0, 0, offsetX, size.Y), defaultWindowsBackground, draw.Src)
+						d.window.Fill(image.Rect(offsetY, 0, size.X, size.Y), defaultWindowsBackground, draw.Src)
+						d.rect = image.Rect(offsetX, 0, offsetY, size.Y)
+						d.mutex.Unlock()
+
+					}
+				}
+			}
+			if d.sizeCallback != nil {
+				(*d.sizeCallback)(size.X, size.Y)
+			}
 		case updateEvent:
 			d.swapbuffer()
 		case error:
@@ -334,12 +337,12 @@ func (d *Drawlib) eventLoop() {
 }
 
 func (d *Drawlib) swapbuffer() {
-	//d.mutex.Lock()
+	d.mutex.Lock()
 	draw.Draw(d.buffer.RGBA(), d.buffer.Bounds(), d.Canvas.im, image.ZP, draw.Src)
 	d.texture.Upload(image.ZP, d.buffer, d.buffer.Bounds())
 	d.window.Scale(d.rect, d.texture, d.texture.Bounds(), draw.Src, nil)
 	d.window.Publish()
-	//d.mutex.Unlock()
+	d.mutex.Unlock()
 }
 
 func (d *Drawlib) CaptureScreen(path string) {
