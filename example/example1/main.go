@@ -8,7 +8,6 @@ func main() {
 
 	d := drawlib.New(drawlib.Option().Title("Hello").Dimension(600, 600))
 	w, h := float64(d.Width()), float64(d.Height())
-	d.SetAutoScale(true)
 	d.Render(func() {
 		d.Canvas.Background(255)
 		d.Canvas.FillRGBA255(255, 0, 0, 16)
