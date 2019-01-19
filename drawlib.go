@@ -1,7 +1,6 @@
 package drawlib
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -191,12 +190,7 @@ func (d *Drawlib) Start() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		//w.Release()
-		//runtime.UnlockOSThread()
-		//os.Exit(0)
-		//runtime.Goexit()
-		// syscall.Exit(0)
-		// defer w.Release()
+		defer w.Release()
 
 		d.mutex = &sync.Mutex{}
 		d.screen = s
@@ -250,20 +244,17 @@ func (d *Drawlib) Start() {
 			}
 		}()
 		d.eventLoop()
-
-		fmt.Println("release window ")
-		w.Release()
 	})
 }
 
 func (d *Drawlib) eventLoop() {
+	d.mutex.Lock()
 	if d.renderCallback != nil {
 		(*d.renderCallback)()
 	}
-	//d.swapbuffer()
+	d.mutex.Unlock()
 	for {
 		e := d.window.NextEvent()
-		//fmt.Println(e)
 		switch e := e.(type) {
 		case lifecycle.Event:
 			switch e.To {
@@ -271,8 +262,6 @@ func (d *Drawlib) eventLoop() {
 				if d.closeCallback != nil {
 					(*d.closeCallback)()
 				}
-				//d.window.Release()
-				fmt.Println("exit loop")
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
@@ -331,10 +320,12 @@ func (d *Drawlib) eventLoop() {
 				}
 			}
 		case paint.Event:
+			d.mutex.Lock()
 			if d.renderCallback != nil {
 				(*d.renderCallback)()
 			}
 			d.swapbuffer()
+			d.mutex.Unlock()
 		case size.Event:
 			size := e.Size()
 			d.options.Width = size.X
@@ -380,11 +371,15 @@ func (d *Drawlib) eventLoop() {
 					}
 				}
 			}
+			d.mutex.Lock()
 			if d.sizeCallback != nil {
 				(*d.sizeCallback)(size.X, size.Y)
 			}
-		// case updateEvent:
-		// 	d.swapbuffer()
+			d.mutex.Unlock()
+		case updateEvent:
+			d.mutex.Lock()
+			d.swapbuffer()
+			d.mutex.Unlock()
 		case error:
 			log.Print(e)
 		}
@@ -392,12 +387,10 @@ func (d *Drawlib) eventLoop() {
 }
 
 func (d *Drawlib) swapbuffer() {
-	//d.mutex.Lock()
 	draw.Draw(d.buffer.RGBA(), d.buffer.Bounds(), d.Canvas.im, image.ZP, draw.Src)
 	d.texture.Upload(image.ZP, d.buffer, d.buffer.Bounds())
 	d.window.Scale(d.rect, d.texture, d.texture.Bounds(), draw.Src, nil)
 	d.window.Publish()
-	//d.mutex.Unlock()
 }
 
 func (d *Drawlib) CaptureScreen(path string) {
