@@ -5,7 +5,6 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
-	"os"
 	"runtime"
 	"sync"
 	"time"
@@ -261,7 +260,7 @@ func (d *Drawlib) eventLoop() {
 					(*d.closeCallback)()
 				}
 				//d.quit <- true
-				os.Exit(0)
+				//os.Exit(0)
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
