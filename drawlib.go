@@ -212,7 +212,7 @@ func (d *Drawlib) Start() {
 		}
 
 		go func() {
-			runtime.LockOSThread()
+			//runtime.LockOSThread()
 			ticker := time.NewTicker(tickDuration)
 			timeStart := time.Now().UnixNano()
 			var tickerC <-chan time.Time
@@ -381,6 +381,7 @@ func (d *Drawlib) eventLoop() {
 		}
 	}
 
+	runtime.UnlockOSThread()
 	os.Exit(0)
 }
 
