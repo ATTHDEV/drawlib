@@ -324,6 +324,7 @@ func (d *Drawlib) eventLoop() {
 			if d.renderCallback != nil {
 				(*d.renderCallback)()
 			}
+			d.swapbuffer()
 			d.mutex.Unlock()
 		case size.Event:
 			size := e.Size()
