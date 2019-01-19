@@ -371,11 +371,11 @@ func (d *Drawlib) eventLoop() {
 				// 	}
 				// }
 			}
-			d.mutex.Lock()
-			if d.sizeCallback != nil {
-				(*d.sizeCallback)(size.X, size.Y)
-			}
-			d.mutex.Unlock()
+			// d.mutex.Lock()
+			// if d.sizeCallback != nil {
+			// 	(*d.sizeCallback)(size.X, size.Y)
+			// }
+			// d.mutex.Unlock()
 		case updateEvent:
 			d.mutex.Lock()
 			d.swapbuffer()
