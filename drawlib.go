@@ -90,7 +90,6 @@ type (
 		closeCallback         *func()
 		initCallback          *func()
 		quit                  chan bool
-		quit                  chan bool
 	}
 )
 
