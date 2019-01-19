@@ -376,7 +376,9 @@ func (d *Drawlib) eventLoop() {
 			}
 		//	d.mutex.Unlock()
 		case updateEvent:
-		//d.swapbuffer()
+			d.mutex.Lock()
+			d.swapbuffer()
+			d.mutex.Unlock()
 		case error:
 			log.Print(e)
 		}
