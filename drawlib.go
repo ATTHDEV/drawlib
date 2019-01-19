@@ -252,7 +252,7 @@ func (d *Drawlib) eventLoop() {
 		tickerC = ticker.C
 		select {
 		case <-tickerC:
-			d.window.Send(updateEvent{})
+			d.window.Send(paint.Event{})
 		}
 		e := d.window.NextEvent()
 		switch e := e.(type) {
@@ -374,10 +374,10 @@ func (d *Drawlib) eventLoop() {
 			if d.sizeCallback != nil {
 				(*d.sizeCallback)(size.X, size.Y)
 			}
-		case updateEvent:
-			d.mutex.Lock()
-			d.swapbuffer()
-			d.mutex.Unlock()
+		// case updateEvent:
+		// 	d.mutex.Lock()
+		// 	d.swapbuffer()
+		// 	d.mutex.Unlock()
 		case error:
 			log.Print(e)
 		}
