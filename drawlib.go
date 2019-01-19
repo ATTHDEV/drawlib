@@ -312,11 +312,14 @@ func (d *Drawlib) eventLoop() {
 				}
 			}
 		case paint.Event:
+			d.mutex.Lock()
 			if d.renderCallback != nil {
 				(*d.renderCallback)()
 			}
 			d.swapbuffer()
+			d.mutex.Unlock()
 		case size.Event:
+			d.mutex.Lock()
 			size := e.Size()
 			d.options.Width = size.X
 			d.options.Height = size.Y
@@ -364,6 +367,8 @@ func (d *Drawlib) eventLoop() {
 			if d.sizeCallback != nil {
 				(*d.sizeCallback)(size.X, size.Y)
 			}
+			d.mutex.Unlock()
+
 		// case updateEvent:
 		// 	d.swapbuffer()
 		case error:
@@ -373,12 +378,12 @@ func (d *Drawlib) eventLoop() {
 }
 
 func (d *Drawlib) swapbuffer() {
-	d.mutex.Lock()
+	//d.mutex.Lock()
 	draw.Draw(d.buffer.RGBA(), d.buffer.Bounds(), d.Canvas.im, image.ZP, draw.Src)
 	d.texture.Upload(image.ZP, d.buffer, d.buffer.Bounds())
 	d.window.Scale(d.rect, d.texture, d.texture.Bounds(), draw.Src, nil)
 	d.window.Publish()
-	d.mutex.Unlock()
+	//d.mutex.Unlock()
 }
 
 func (d *Drawlib) CaptureScreen(path string) {
