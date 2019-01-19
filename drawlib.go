@@ -251,7 +251,7 @@ func (d *Drawlib) Start() {
 		}()
 		d.eventLoop()
 
-		fmt.Println("release window")
+		fmt.Println("release window ")
 		w.Release()
 	})
 }
