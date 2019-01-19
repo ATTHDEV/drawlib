@@ -21,6 +21,35 @@ var (
 	defaultWindowsBackground = color.RGBA{240, 240, 240, 255}
 )
 
+type option struct {
+	width, height int
+	title         string
+	x, y          int
+}
+
+func Option() *option {
+	return &option{
+		title: "Drawlib Window", x: -1, y: -1, width: 600, height: 600,
+	}
+}
+
+func (o *option) Title(s string) *option {
+	o.title = s
+	return o
+}
+
+func (o *option) Dimension(w, h int) *option {
+	o.width = w
+	o.height = h
+	return o
+}
+
+func (o *option) Location(x, y int) *option {
+	o.x = x
+	o.y = y
+	return o
+}
+
 type (
 	updateEvent struct {
 		dt float64
@@ -130,10 +159,14 @@ func (d *Drawlib) OnWindowsClose(f func()) {
 	d.closeCallback = &f
 }
 
-func New(o ...*screen.WindowOptions) *Drawlib {
+func New(o ...*option) *Drawlib {
 	var options *screen.WindowOptions
 	if len(o) == 1 {
-		options = o[0]
+		options = screen.NewWindowOptions(
+			screen.Title(o[0].title),
+			screen.Dimensions(o[0].width, o[0].height),
+			screen.Location(o[0].x, o[0].y),
+		)
 	} else {
 		options = screen.NewWindowOptions(
 			screen.Title("Drawlib Windows"),

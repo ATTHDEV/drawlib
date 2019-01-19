@@ -1,6 +1,7 @@
 package drawlib
 
 import (
+	"fmt"
 	"math"
 
 	"golang.org/x/image/math/fixed"
@@ -170,4 +171,8 @@ func (v *Vector) Interpolate(v2 *Vector, t float64) *Vector {
 	x := v.X + (v2.X-v.X)*t
 	y := v.Y + (v2.Y-v.Y)*t
 	return NewVector(x, y)
+}
+
+func (v *Vector) String() string {
+	return fmt.Sprintf("(%f,%f)", v.X, v.Y)
 }
