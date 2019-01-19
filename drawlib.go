@@ -219,8 +219,9 @@ func (d *Drawlib) Start() {
 			for {
 				tickerC = ticker.C
 				select {
-				// case <-d.quit:
-				// 	ticker.Stop()
+				case <-d.quit:
+					return
+					//ticker.Stop()
 				// 	break
 				case <-tickerC:
 					if d.keyIsPressCallback != nil {
@@ -261,7 +262,7 @@ func (d *Drawlib) eventLoop() {
 					(*d.closeCallback)()
 				}
 				//syscall.Exit(0)
-				//d.quit <- true
+				d.quit <- true
 				//runtime.UnlockOSThread()
 				//d.window.Release()
 				//break
