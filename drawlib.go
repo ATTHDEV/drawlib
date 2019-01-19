@@ -208,7 +208,7 @@ func (d *Drawlib) Start() {
 			(*d.initCallback)()
 		}
 
-		go func() {
+		/*go func() {
 			ticker := time.NewTicker(tickDuration)
 			timeStart := time.Now().UnixNano()
 			var tickerC <-chan time.Time
@@ -235,7 +235,7 @@ func (d *Drawlib) Start() {
 					w.Send(updateEvent{})
 				}
 			}
-		}()
+		}()*/
 		d.eventLoop()
 	})
 }
@@ -245,7 +245,14 @@ func (d *Drawlib) eventLoop() {
 	// 	(*d.renderCallback)()
 	// 	d.swapbuffer()
 	// }
+	ticker := time.NewTicker(tickDuration)
+	//timeStart := time.Now().UnixNano()
+	var tickerC <-chan time.Time
 	for {
+		tickerC = ticker.C
+		select {
+		case <-tickerC:
+		}
 		e := d.window.NextEvent()
 		switch e := e.(type) {
 		case lifecycle.Event:
