@@ -248,7 +248,7 @@ func (d *Drawlib) Start() {
 		//d.eventLoop()
 
 		d.window.Release()
-		runtime.UnlockOSThread()
+		//runtime.UnlockOSThread()
 		os.Exit(0)
 	})
 }
