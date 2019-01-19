@@ -1,11 +1,7 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/ATTHDEV/drawlib"
-	"golang.org/x/mobile/event/key"
-	"golang.org/x/mobile/event/mouse"
 )
 
 func main() {
@@ -23,36 +19,36 @@ func main() {
 			d.Canvas.Pop()
 		}
 	})
-	d.OnKeyPress(func(k key.Code) {
-		if k == key.CodeA {
-			d.SetFullScreen(false)
-		} else if k == key.CodeS {
-			d.SetFullScreen(true)
-		} else if k == key.CodeD {
-			d.SetMaximize(false)
-		} else if k == key.CodeF {
-			d.SetMaximize(true)
-		} else if k == key.CodeLeftArrow {
-			d.SetLocation(800, 0)
-		} else if k == key.CodeRightArrow {
-			d.SetSize(200, 200)
-		}
-	})
-	d.OnMousePress(func(b mouse.Button, x, y int) {
-		fmt.Println("press : ", b, x, y)
-	})
-	d.OnMouseIsPress(func(b mouse.Button, x, y int) {
-		fmt.Println("is press : ", b, x, y)
-	})
-	d.OnMouseRelease(func(b mouse.Button, x, y int) {
-		fmt.Println("release : ", b, x, y)
-	})
-	d.OnMouseWheel(func(step int, x, y int) {
-		fmt.Println(step, x, y)
-	})
-	d.OnMouseMove(func(x, y int) {
-		fmt.Println(x, y)
-	})
+	// d.OnKeyPress(func(k key.Code) {
+	// 	if k == key.CodeA {
+	// 		d.SetFullScreen(false)
+	// 	} else if k == key.CodeS {
+	// 		d.SetFullScreen(true)
+	// 	} else if k == key.CodeD {
+	// 		d.SetMaximize(false)
+	// 	} else if k == key.CodeF {
+	// 		d.SetMaximize(true)
+	// 	} else if k == key.CodeLeftArrow {
+	// 		d.SetLocation(800, 0)
+	// 	} else if k == key.CodeRightArrow {
+	// 		d.SetSize(200, 200)
+	// 	}
+	// })
+	// d.OnMousePress(func(b mouse.Button, x, y int) {
+	// 	fmt.Println("press : ", b, x, y)
+	// })
+	// d.OnMouseIsPress(func(b mouse.Button, x, y int) {
+	// 	fmt.Println("is press : ", b, x, y)
+	// })
+	// d.OnMouseRelease(func(b mouse.Button, x, y int) {
+	// 	fmt.Println("release : ", b, x, y)
+	// })
+	// d.OnMouseWheel(func(step int, x, y int) {
+	// 	fmt.Println(step, x, y)
+	// })
+	// d.OnMouseMove(func(x, y int) {
+	// 	fmt.Println(x, y)
+	// })
 	d.Start()
 	d.CaptureScreen("out")
 }
