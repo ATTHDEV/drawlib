@@ -196,6 +196,7 @@ func (d *Drawlib) Start() {
 		//runtime.Goexit()
 		// syscall.Exit(0)
 		// defer w.Release()
+
 		d.mutex = &sync.Mutex{}
 		d.screen = s
 		d.window = w
@@ -248,6 +249,8 @@ func (d *Drawlib) Start() {
 			}
 		}()
 		d.eventLoop()
+
+		w.Release()
 	})
 }
 
@@ -265,7 +268,7 @@ func (d *Drawlib) eventLoop() {
 				if d.closeCallback != nil {
 					(*d.closeCallback)()
 				}
-				d.window.Release()
+				//d.window.Release()
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
