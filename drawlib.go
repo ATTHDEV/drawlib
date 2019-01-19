@@ -263,7 +263,7 @@ func (d *Drawlib) eventLoop() {
 	//d.swapbuffer()
 	for {
 		e := d.window.NextEvent()
-		fmt.Println(e)
+		//fmt.Println(e)
 		switch e := e.(type) {
 		case lifecycle.Event:
 			switch e.To {
