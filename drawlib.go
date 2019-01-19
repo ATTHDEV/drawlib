@@ -211,39 +211,38 @@ func (d *Drawlib) Start() {
 			(*d.initCallback)()
 		}
 
-		go func() {
-			//runtime.LockOSThread()
-			ticker := time.NewTicker(tickDuration)
-			timeStart := time.Now().UnixNano()
-			var tickerC <-chan time.Time
-			for {
-				tickerC = ticker.C
-				select {
-				case <-d.quit:
-					return
-					//ticker.Stop()
-				// 	break
-				case <-tickerC:
-					if d.keyIsPressCallback != nil {
-						if d.keyIsPress {
-							(*d.keyIsPressCallback)(d.keyIsPressCode)
-						}
-					}
-					if d.mouseIsPressCallback != nil {
-						if d.mouseIsPress {
-							(*d.mouseIsPressCallback)(d.mouseIsPressButton, d.mouseIsPressX, d.mouseIsPressY)
-						}
-					}
-					now := time.Now().UnixNano()
-					delta := float64(now-timeStart) / 1000000000
-					timeStart = now
-					if d.renderLoopCallback != nil {
-						(*d.renderLoopCallback)(delta)
-					}
-					w.Send(updateEvent{})
-				}
-			}
-		}()
+		// go func() {
+		// 	//runtime.LockOSThread()
+		// 	ticker := time.NewTicker(tickDuration)
+		// 	timeStart := time.Now().UnixNano()
+		// 	var tickerC <-chan time.Time
+		// 	for {
+		// 		tickerC = ticker.C
+		// 		select {
+		// 		// case <-d.quit:
+		// 		//ticker.Stop()
+		// 		// 	break
+		// 		case <-tickerC:
+		// 			if d.keyIsPressCallback != nil {
+		// 				if d.keyIsPress {
+		// 					(*d.keyIsPressCallback)(d.keyIsPressCode)
+		// 				}
+		// 			}
+		// 			if d.mouseIsPressCallback != nil {
+		// 				if d.mouseIsPress {
+		// 					(*d.mouseIsPressCallback)(d.mouseIsPressButton, d.mouseIsPressX, d.mouseIsPressY)
+		// 				}
+		// 			}
+		// 			now := time.Now().UnixNano()
+		// 			delta := float64(now-timeStart) / 1000000000
+		// 			timeStart = now
+		// 			if d.renderLoopCallback != nil {
+		// 				(*d.renderLoopCallback)(delta)
+		// 			}
+		// 			w.Send(updateEvent{})
+		// 		}
+		// 	}
+		// }()
 		d.eventLoop()
 	})
 }
@@ -252,6 +251,7 @@ func (d *Drawlib) eventLoop() {
 	if d.renderCallback != nil {
 		(*d.renderCallback)()
 	}
+	d.swapbuffer()
 	for {
 		e := d.window.NextEvent()
 		switch e := e.(type) {
@@ -262,12 +262,13 @@ func (d *Drawlib) eventLoop() {
 					(*d.closeCallback)()
 				}
 				//syscall.Exit(0)
-				d.quit <- true
+				//d.quit <- true
 				//runtime.UnlockOSThread()
 				//d.window.Release()
 				//break
 				// runtime.UnlockOSThread()
 				// runtime.Goexit()
+				d.window.Release()
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
@@ -325,10 +326,10 @@ func (d *Drawlib) eventLoop() {
 					(*d.mouseMoveCallback)(int(e.X), int(e.Y))
 				}
 			}
-		//case paint.Event:
-		// if d.renderCallback != nil {
-		// 	(*d.renderCallback)()
-		// }
+		// case paint.Event:
+		// 	if d.renderCallback != nil {
+		// 		(*d.renderCallback)()
+		// 	}
 		case size.Event:
 			size := e.Size()
 			d.options.Width = size.X
