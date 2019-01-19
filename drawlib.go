@@ -252,7 +252,7 @@ func (d *Drawlib) eventLoop() {
 		tickerC = ticker.C
 		select {
 		case <-tickerC:
-			w.Send(updateEvent{})
+			d.window.Send(updateEvent{})
 		}
 		e := d.window.NextEvent()
 		switch e := e.(type) {
