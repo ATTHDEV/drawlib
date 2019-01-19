@@ -5,9 +5,9 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
-	"os"
 	"runtime"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/ATTHDEV/shiny/driver"
@@ -249,7 +249,9 @@ func (d *Drawlib) Start() {
 
 		d.window.Release()
 		//runtime.UnlockOSThread()
-		os.Exit(0)
+		// os.Exit(0)
+		//runtime.Goexit()
+		syscall.Exit(0)
 	})
 }
 
