@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"os"
 	"runtime"
 	"sync"
 	"time"
@@ -262,7 +263,8 @@ func (d *Drawlib) eventLoop() {
 				//syscall.Exit(0)
 				//d.quit <- true
 				//runtime.UnlockOSThread()
-				d.window.Release()
+				//d.window.Release()
+				//break
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
@@ -378,6 +380,8 @@ func (d *Drawlib) eventLoop() {
 			log.Print(e)
 		}
 	}
+
+	os.Exit(0)
 }
 
 func (d *Drawlib) swapbuffer() {
