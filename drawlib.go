@@ -184,6 +184,7 @@ func New(o ...*option) *Drawlib {
 }
 
 func (d *Drawlib) Start() {
+	runtime.UnlockOSThread()
 	driver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(d.options)
 
@@ -264,6 +265,8 @@ func (d *Drawlib) eventLoop() {
 				//runtime.UnlockOSThread()
 				//d.window.Release()
 				//break
+				// runtime.UnlockOSThread()
+				// runtime.Goexit()
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
@@ -380,8 +383,8 @@ func (d *Drawlib) eventLoop() {
 		}
 	}
 
-	runtime.UnlockOSThread()
-	runtime.Goexit()
+	// runtime.UnlockOSThread()
+	// runtime.Goexit()
 	//os.Exit(0)
 }
 
