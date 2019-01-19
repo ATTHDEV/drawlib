@@ -1,6 +1,7 @@
 package drawlib
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -250,6 +251,7 @@ func (d *Drawlib) Start() {
 		}()
 		d.eventLoop()
 
+		fmt.Println("release window")
 		w.Release()
 	})
 }
@@ -269,6 +271,7 @@ func (d *Drawlib) eventLoop() {
 					(*d.closeCallback)()
 				}
 				//d.window.Release()
+				fmt.Println("exit loop")
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
