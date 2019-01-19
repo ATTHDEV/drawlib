@@ -6,6 +6,7 @@ import (
 	"image/draw"
 	"log"
 	"os"
+	"runtime"
 	"sync"
 	"time"
 
@@ -211,6 +212,7 @@ func (d *Drawlib) Start() {
 		}
 
 		go func() {
+			runtime.LockOSThread()
 			ticker := time.NewTicker(tickDuration)
 			timeStart := time.Now().UnixNano()
 			var tickerC <-chan time.Time
