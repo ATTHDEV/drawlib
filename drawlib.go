@@ -5,9 +5,9 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"os"
 	"runtime"
 	"sync"
-	"syscall"
 	"time"
 
 	"github.com/ATTHDEV/shiny/driver"
@@ -260,9 +260,10 @@ func (d *Drawlib) eventLoop() {
 				if d.closeCallback != nil {
 					(*d.closeCallback)()
 				}
-				syscall.Exit(0)
+				//syscall.Exit(0)
 				//d.quit <- true
-				//os.Exit(0)
+				runtime.UnlockOSThread()
+				os.Exit(0)
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
