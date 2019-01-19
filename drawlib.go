@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"os"
 	"runtime"
 	"sync"
 	"time"
@@ -247,6 +248,8 @@ func (d *Drawlib) Start() {
 		//d.eventLoop()
 
 		d.window.Release()
+		runtime.UnlockOSThread()
+		os.Exit(0)
 	})
 }
 
