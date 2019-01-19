@@ -5,7 +5,6 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
-	"runtime"
 	"sync"
 	"time"
 
@@ -185,7 +184,6 @@ func New(o ...*option) *Drawlib {
 }
 
 func (d *Drawlib) Start() {
-	runtime.UnlockOSThread()
 	driver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(d.options)
 
