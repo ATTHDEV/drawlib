@@ -319,7 +319,7 @@ func (d *Drawlib) eventLoop() {
 			d.swapbuffer()
 			d.mutex.Unlock()
 		case size.Event:
-			d.mutex.Lock()
+			//d.mutex.Lock()
 			size := e.Size()
 			d.options.Width = size.X
 			d.options.Height = size.Y
@@ -367,7 +367,7 @@ func (d *Drawlib) eventLoop() {
 			if d.sizeCallback != nil {
 				(*d.sizeCallback)(size.X, size.Y)
 			}
-			d.mutex.Unlock()
+		//	d.mutex.Unlock()
 
 		// case updateEvent:
 		// 	d.swapbuffer()
