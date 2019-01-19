@@ -245,6 +245,8 @@ func (d *Drawlib) Start() {
 		// 	}
 		// }()
 		//d.eventLoop()
+
+		d.window.Release()
 	})
 }
 
