@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -195,7 +196,7 @@ func (d *Drawlib) Start() {
 		w.Release()
 		fmt.Println("delete")
 		//runtime.UnlockOSThread()
-		// os.Exit(0)
+		os.Exit(0)
 		//runtime.Goexit()
 		// syscall.Exit(0)
 		// defer w.Release()
