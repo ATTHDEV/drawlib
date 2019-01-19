@@ -218,6 +218,9 @@ func (d *Drawlib) Start() {
 			for {
 				tickerC = ticker.C
 				select {
+				case <-d.quit:
+					ticker.Stop()
+					break
 				case <-tickerC:
 					if d.keyIsPressCallback != nil {
 						if d.keyIsPress {
@@ -236,9 +239,6 @@ func (d *Drawlib) Start() {
 						(*d.renderLoopCallback)(delta)
 					}
 					w.Send(updateEvent{})
-				case <-d.quit:
-					// 	ticker.Stop()
-					break
 				}
 			}
 		}()
