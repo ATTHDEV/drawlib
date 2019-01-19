@@ -244,7 +244,7 @@ func (d *Drawlib) Start() {
 		// 		}
 		// 	}
 		// }()
-		d.eventLoop()
+		//d.eventLoop()
 	})
 }
 
@@ -268,9 +268,10 @@ func (d *Drawlib) eventLoop() {
 				//d.window.Release()
 				//break
 				// runtime.UnlockOSThread()
-				// runtime.Goexit()
 				d.window.Release()
-				return
+				//runtime.Goexit()
+
+				break
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
 					(*d.visibleCallback)()
