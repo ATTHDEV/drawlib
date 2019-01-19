@@ -324,9 +324,9 @@ func (d *Drawlib) eventLoop() {
 			d.options.Width = size.X
 			d.options.Height = size.Y
 			if d.autoscale {
-				d.mutex.Lock()
+				//d.mutex.Lock()
 				d.rect = e.Bounds()
-				d.mutex.Unlock()
+				//d.mutex.Unlock()
 			} else {
 				// update canvas position
 				w := d.Canvas.Width()
@@ -346,20 +346,20 @@ func (d *Drawlib) eventLoop() {
 					if size.X < size.Y {
 						offsetY := (size.Y-h)/2 + (w-size.X)/2
 						offsetX := offsetY + size.X
-						d.mutex.Lock()
+						//d.mutex.Lock()
 						d.window.Fill(image.Rect(0, 0, size.X, offsetY), defaultWindowsBackground, draw.Src)
 						d.window.Fill(image.Rect(0, offsetX, size.X, size.Y), defaultWindowsBackground, draw.Src)
 						d.rect = image.Rect(0, offsetY, size.X, offsetX)
-						d.mutex.Unlock()
+						//d.mutex.Unlock()
 
 					} else {
 						offsetX := (size.X-w)/2 + (h-size.Y)/2
 						offsetY := offsetX + size.Y
-						d.mutex.Lock()
+						//d.mutex.Lock()
 						d.window.Fill(image.Rect(0, 0, offsetX, size.Y), defaultWindowsBackground, draw.Src)
 						d.window.Fill(image.Rect(offsetY, 0, size.X, size.Y), defaultWindowsBackground, draw.Src)
 						d.rect = image.Rect(offsetX, 0, offsetY, size.Y)
-						d.mutex.Unlock()
+						//d.mutex.Unlock()
 
 					}
 				}
