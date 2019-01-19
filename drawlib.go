@@ -211,40 +211,88 @@ func (d *Drawlib) Start() {
 			(*d.initCallback)()
 		}
 
-		go func() {
-			//runtime.LockOSThread()
-			ticker := time.NewTicker(tickDuration)
-			timeStart := time.Now().UnixNano()
-			var tickerC <-chan time.Time
-			for {
-				tickerC = ticker.C
-				select {
-				case <-d.quit:
-					ticker.Stop()
-					break
-				case <-tickerC:
-					if d.keyIsPressCallback != nil {
-						if d.keyIsPress {
-							(*d.keyIsPressCallback)(d.keyIsPressCode)
-						}
-					}
-					if d.mouseIsPressCallback != nil {
-						if d.mouseIsPress {
-							(*d.mouseIsPressCallback)(d.mouseIsPressButton, d.mouseIsPressX, d.mouseIsPressY)
-						}
-					}
-					now := time.Now().UnixNano()
-					delta := float64(now-timeStart) / 1000000000
-					timeStart = now
-					if d.renderLoopCallback != nil {
-						(*d.renderLoopCallback)(delta)
-					}
-					w.Send(updateEvent{})
-				}
-			}
-		}()
+		// go func() {
+		// 	//runtime.LockOSThread()
+		// 	ticker := time.NewTicker(tickDuration)
+		// 	timeStart := time.Now().UnixNano()
+		// 	var tickerC <-chan time.Time
+		// 	for {
+		// 		tickerC = ticker.C
+		// 		select {
+		// 		case <-d.quit:
+		// 			ticker.Stop()
+		// 			break
+		// 		case <-tickerC:
+		// 			if d.keyIsPressCallback != nil {
+		// 				if d.keyIsPress {
+		// 					(*d.keyIsPressCallback)(d.keyIsPressCode)
+		// 				}
+		// 			}
+		// 			if d.mouseIsPressCallback != nil {
+		// 				if d.mouseIsPress {
+		// 					(*d.mouseIsPressCallback)(d.mouseIsPressButton, d.mouseIsPressX, d.mouseIsPressY)
+		// 				}
+		// 			}
+		// 			now := time.Now().UnixNano()
+		// 			delta := float64(now-timeStart) / 1000000000
+		// 			timeStart = now
+		// 			if d.renderLoopCallback != nil {
+		// 				(*d.renderLoopCallback)(delta)
+		// 			}
+		// 			w.Send(updateEvent{})
+		// 		}
+		// 	}
+		// }()
+
+		go d.start()
+
 		d.eventLoop()
 	})
+}
+
+func (d *Drawlib) start() {
+	go d.drawLoop()
+}
+
+func (d *Drawlib) stop() {
+	d.quit <- true
+}
+
+func (d *Drawlib) restart() {
+	d.stop()
+	d.start()
+}
+
+func (d *Drawlib) drawLoop() {
+	ticker := time.NewTicker(tickDuration)
+	timeStart := time.Now().UnixNano()
+	for {
+		select {
+		case <-ticker.C:
+			now := time.Now().UnixNano()
+			delta := float64(now-timeStart) / 1000000000
+			timeStart = now
+
+			if d.keyIsPressCallback != nil {
+				if d.keyIsPress {
+					(*d.keyIsPressCallback)(d.keyIsPressCode)
+				}
+			}
+			if d.mouseIsPressCallback != nil {
+				if d.mouseIsPress {
+					(*d.mouseIsPressCallback)(d.mouseIsPressButton, d.mouseIsPressX, d.mouseIsPressY)
+				}
+			}
+
+			if d.renderLoopCallback != nil {
+				(*d.renderLoopCallback)(delta)
+			}
+			d.window.Send(updateEvent{})
+
+		case <-d.quit:
+			ticker.Stop()
+		}
+	}
 }
 
 func (d *Drawlib) eventLoop() {
@@ -275,7 +323,7 @@ func (d *Drawlib) eventLoop() {
 		case key.Event:
 			if d.defaultCloseOperation {
 				if e.Code == key.CodeEscape {
-					d.quit <- true
+					d.stop()
 					return
 				}
 			}
@@ -327,6 +375,7 @@ func (d *Drawlib) eventLoop() {
 			}
 			d.mutex.Unlock()
 		case size.Event:
+			d.stop()
 			size := e.Size()
 			d.options.Width = size.X
 			d.options.Height = size.Y
@@ -376,6 +425,7 @@ func (d *Drawlib) eventLoop() {
 			// 	(*d.sizeCallback)(size.X, size.Y)
 			// }
 			// d.mutex.Unlock()
+			d.start()
 		case updateEvent:
 			d.mutex.Lock()
 			d.swapbuffer()
