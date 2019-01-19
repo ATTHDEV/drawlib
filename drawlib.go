@@ -7,6 +7,7 @@ import (
 	"log"
 	"runtime"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/ATTHDEV/shiny/driver"
@@ -259,6 +260,7 @@ func (d *Drawlib) eventLoop() {
 				if d.closeCallback != nil {
 					(*d.closeCallback)()
 				}
+				syscall.Exit(0)
 				//d.quit <- true
 				//os.Exit(0)
 				return
