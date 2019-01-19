@@ -5,7 +5,6 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
-	"os"
 	"runtime"
 	"sync"
 	"time"
@@ -237,9 +236,9 @@ func (d *Drawlib) Start() {
 						(*d.renderLoopCallback)(delta)
 					}
 					w.Send(updateEvent{})
-					// case <-d.quit:
+				case <-d.quit:
 					// 	ticker.Stop()
-					// 	break;
+					break
 				}
 			}
 		}()
@@ -261,9 +260,8 @@ func (d *Drawlib) eventLoop() {
 					(*d.closeCallback)()
 				}
 				//syscall.Exit(0)
-				//d.quit <- true
-				runtime.UnlockOSThread()
-				os.Exit(0)
+				d.quit <- true
+				//runtime.UnlockOSThread()
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
