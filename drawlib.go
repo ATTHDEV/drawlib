@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
-	"runtime"
+	"os"
 	"sync"
 	"time"
 
@@ -211,7 +211,6 @@ func (d *Drawlib) Start() {
 		}
 
 		go func() {
-			runtime.LockOSThread()
 			ticker := time.NewTicker(tickDuration)
 			timeStart := time.Now().UnixNano()
 			var tickerC <-chan time.Time
@@ -236,9 +235,9 @@ func (d *Drawlib) Start() {
 						(*d.renderLoopCallback)(delta)
 					}
 					w.Send(updateEvent{})
-				case <-d.quit:
-					ticker.Stop()
-					break;
+					// case <-d.quit:
+					// 	ticker.Stop()
+					// 	break;
 				}
 			}
 		}()
@@ -259,7 +258,8 @@ func (d *Drawlib) eventLoop() {
 				if d.closeCallback != nil {
 					(*d.closeCallback)()
 				}
-				d.quit <- true
+				//d.quit <- true
+				os.Exit(0)
 				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
