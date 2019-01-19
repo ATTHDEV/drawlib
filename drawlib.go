@@ -14,6 +14,7 @@ import (
 	"golang.org/x/mobile/event/key"
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/mouse"
+	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
 )
 
@@ -251,7 +252,7 @@ func (d *Drawlib) eventLoop() {
 	if d.renderCallback != nil {
 		(*d.renderCallback)()
 	}
-	d.swapbuffer()
+	//d.swapbuffer()
 	for {
 		e := d.window.NextEvent()
 		switch e := e.(type) {
@@ -326,10 +327,11 @@ func (d *Drawlib) eventLoop() {
 					(*d.mouseMoveCallback)(int(e.X), int(e.Y))
 				}
 			}
-		// case paint.Event:
-		// 	if d.renderCallback != nil {
-		// 		(*d.renderCallback)()
-		// 	}
+		case paint.Event:
+			if d.renderCallback != nil {
+				(*d.renderCallback)()
+			}
+			d.swapbuffer()
 		case size.Event:
 			size := e.Size()
 			d.options.Width = size.X
@@ -378,8 +380,8 @@ func (d *Drawlib) eventLoop() {
 			if d.sizeCallback != nil {
 				(*d.sizeCallback)(size.X, size.Y)
 			}
-		case updateEvent:
-			d.swapbuffer()
+		// case updateEvent:
+		// 	d.swapbuffer()
 		case error:
 			log.Print(e)
 		}
