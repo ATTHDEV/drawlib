@@ -13,7 +13,6 @@ import (
 	"golang.org/x/mobile/event/key"
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/mouse"
-	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
 )
 
@@ -319,12 +318,12 @@ func (d *Drawlib) eventLoop() {
 					(*d.mouseMoveCallback)(int(e.X), int(e.Y))
 				}
 			}
-		case paint.Event:
-			d.mutex.Lock()
-			if d.renderCallback != nil {
-				(*d.renderCallback)()
-			}
-			d.mutex.Unlock()
+		//case paint.Event:
+		// d.mutex.Lock()
+		// if d.renderCallback != nil {
+		// 	(*d.renderCallback)()
+		// }
+		// d.mutex.Unlock()
 		case size.Event:
 			size := e.Size()
 			d.options.Width = size.X
@@ -396,12 +395,12 @@ func (d *Drawlib) CaptureScreen(path string) {
 	d.Canvas.SavePNG(path + ".png")
 }
 
-func (d *Drawlib) Width() int {
-	return d.options.Width
+func (d *Drawlib) Width() float64 {
+	return float64(d.options.Width)
 }
 
-func (d *Drawlib) Height() int {
-	return d.options.Height
+func (d *Drawlib) Height() float64 {
+	return float64(d.options.Height)
 }
 
 func (d *Drawlib) Quit() {

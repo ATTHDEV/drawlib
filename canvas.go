@@ -429,6 +429,16 @@ func (c *Canvas) Stroke() {
 	c.ClearPath()
 }
 
+func (c *Canvas) StrokeGray(gray float64) {
+	c.SetRGB(gray, gray, gray)
+	c.Stroke()
+}
+
+func (c *Canvas) StrokeGray255(gray int) {
+	c.SetRGB255(gray, gray, gray)
+	c.Stroke()
+}
+
 func (c *Canvas) StrokeRGB(r, g, b float64) {
 	c.SetRGB(r, g, b)
 	c.Stroke()
@@ -468,6 +478,16 @@ func (c *Canvas) FillPreserve() *Canvas {
 func (c *Canvas) Fill() {
 	c.FillPreserve()
 	c.ClearPath()
+}
+
+func (c *Canvas) FillGray(gray float64) {
+	c.SetRGB(gray, gray, gray)
+	c.Fill()
+}
+
+func (c *Canvas) FillGray255(gray int) {
+	c.SetRGB255(gray, gray, gray)
+	c.Fill()
 }
 
 func (c *Canvas) FillRGB(r, g, b float64) {
@@ -936,7 +956,8 @@ func (c *Canvas) InvertY() *Canvas {
 }
 
 func (c *Canvas) Push() *Canvas {
-	c.stack = append(c.stack, c)
+	x := *c
+	c.stack = append(c.stack, &x)
 	return c
 }
 

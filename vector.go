@@ -173,6 +173,10 @@ func (v *Vector) Interpolate(v2 *Vector, t float64) *Vector {
 	return NewVector(x, y)
 }
 
+func (v *Vector) XY() (float64, float64) {
+	return v.X, v.Y
+}
+
 func (v *Vector) String() string {
 	return fmt.Sprintf("(%f,%f)", v.X, v.Y)
 }
