@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"runtime"
 	"sync"
 	"time"
 
@@ -245,6 +246,7 @@ func (d *Drawlib) eventLoop() {
 	// 	(*d.renderCallback)()
 	// 	d.swapbuffer()
 	// }
+	runtime.UnlockOSThread()
 	ticker := time.NewTicker(tickDuration)
 	//timeStart := time.Now().UnixNano()
 	var tickerC <-chan time.Time
