@@ -7,7 +7,6 @@ import (
 	"log"
 	"runtime"
 	"sync"
-	"syscall"
 	"time"
 
 	"github.com/ATTHDEV/shiny/driver"
@@ -193,25 +192,30 @@ func (d *Drawlib) Start() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer w.Release()
-		d.mutex = &sync.Mutex{}
-		d.screen = s
-		d.window = w
-		d.rect = image.Rect(0, 0, d.options.Width, d.options.Height)
+		w.Release()
+		//runtime.UnlockOSThread()
+		// os.Exit(0)
+		//runtime.Goexit()
+		// syscall.Exit(0)
+		// defer w.Release()
+		// d.mutex = &sync.Mutex{}
+		// d.screen = s
+		// d.window = w
+		// d.rect = image.Rect(0, 0, d.options.Width, d.options.Height)
 
-		d.buffer, err = s.NewBuffer(image.Point{d.options.Width, d.options.Height})
-		if err != nil {
-			panic(err)
-		}
+		// d.buffer, err = s.NewBuffer(image.Point{d.options.Width, d.options.Height})
+		// if err != nil {
+		// 	panic(err)
+		// }
 
-		d.texture, err = d.screen.NewTexture(d.buffer.Bounds().Max)
-		if err != nil {
-			panic(err)
-		}
+		// d.texture, err = d.screen.NewTexture(d.buffer.Bounds().Max)
+		// if err != nil {
+		// 	panic(err)
+		// }
 
-		if d.initCallback != nil {
-			(*d.initCallback)()
-		}
+		// if d.initCallback != nil {
+		// 	(*d.initCallback)()
+		// }
 
 		// go func() {
 		// 	//runtime.LockOSThread()
@@ -247,11 +251,11 @@ func (d *Drawlib) Start() {
 		// }()
 		//d.eventLoop()
 
-		d.window.Release()
-		//runtime.UnlockOSThread()
-		// os.Exit(0)
-		//runtime.Goexit()
-		syscall.Exit(0)
+		// d.window.Release()
+		// //runtime.UnlockOSThread()
+		// // os.Exit(0)
+		// //runtime.Goexit()
+		// syscall.Exit(0)
 	})
 }
 
