@@ -1,6 +1,7 @@
 package drawlib
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -190,7 +191,9 @@ func (d *Drawlib) Start() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println("create")
 		w.Release()
+		fmt.Println("delete")
 		//runtime.UnlockOSThread()
 		// os.Exit(0)
 		//runtime.Goexit()
