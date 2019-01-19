@@ -238,6 +238,7 @@ func (d *Drawlib) Start() {
 					w.Send(updateEvent{})
 				case <-d.quit:
 					ticker.Stop()
+					break;
 				}
 			}
 		}()
