@@ -263,53 +263,53 @@ func (d *Drawlib) eventLoop() {
 					(*d.hiddenCallback)()
 				}
 			}
-		case key.Event:
-			if d.defaultCloseOperation {
-				if e.Code == key.CodeEscape {
-					return
-				}
-			}
-			switch e.Direction {
-			case key.DirPress:
-				d.keyIsPress = true
-				d.keyIsPressCode = e.Code
-				if d.KeyPressCallback != nil {
-					(*d.KeyPressCallback)(e.Code)
-				}
-			case key.DirRelease:
-				d.keyIsPress = false
-				if d.KeyReleaseCallback != nil {
-					(*d.KeyReleaseCallback)(e.Code)
-				}
-			}
-		case mouse.Event:
-			switch e.Direction {
-			case mouse.DirPress:
-				d.mouseIsPress = true
-				d.mouseIsPressButton = e.Button
-				if d.mousePressCallback != nil {
-					(*d.mousePressCallback)(e.Button, int(e.X), int(e.Y))
-				}
-			case mouse.DirRelease:
-				d.mouseIsPress = false
-				d.mouseIsPressX = int(e.X)
-				d.mouseIsPressY = int(e.Y)
-				if d.mouseReleaseCallback != nil {
-					(*d.mouseReleaseCallback)(e.Button, d.mouseIsPressX, d.mouseIsPressY)
-				}
-			case mouse.DirStep:
-				if d.mouseWheelCallback != nil {
-					if e.Button == -1 {
-						(*d.mouseWheelCallback)(1, int(e.X), int(e.Y))
-					} else if e.Button == -2 {
-						(*d.mouseWheelCallback)(-1, int(e.X), int(e.Y))
-					}
-				}
-			case mouse.DirNone:
-				if d.mouseMoveCallback != nil {
-					(*d.mouseMoveCallback)(int(e.X), int(e.Y))
-				}
-			}
+		// case key.Event:
+		// 	if d.defaultCloseOperation {
+		// 		if e.Code == key.CodeEscape {
+		// 			return
+		// 		}
+		// 	}
+		// 	switch e.Direction {
+		// 	case key.DirPress:
+		// 		d.keyIsPress = true
+		// 		d.keyIsPressCode = e.Code
+		// 		if d.KeyPressCallback != nil {
+		// 			(*d.KeyPressCallback)(e.Code)
+		// 		}
+		// 	case key.DirRelease:
+		// 		d.keyIsPress = false
+		// 		if d.KeyReleaseCallback != nil {
+		// 			(*d.KeyReleaseCallback)(e.Code)
+		// 		}
+		// 	}
+		// case mouse.Event:
+		// 	switch e.Direction {
+		// 	case mouse.DirPress:
+		// 		d.mouseIsPress = true
+		// 		d.mouseIsPressButton = e.Button
+		// 		if d.mousePressCallback != nil {
+		// 			(*d.mousePressCallback)(e.Button, int(e.X), int(e.Y))
+		// 		}
+		// 	case mouse.DirRelease:
+		// 		d.mouseIsPress = false
+		// 		d.mouseIsPressX = int(e.X)
+		// 		d.mouseIsPressY = int(e.Y)
+		// 		if d.mouseReleaseCallback != nil {
+		// 			(*d.mouseReleaseCallback)(e.Button, d.mouseIsPressX, d.mouseIsPressY)
+		// 		}
+		// 	case mouse.DirStep:
+		// 		if d.mouseWheelCallback != nil {
+		// 			if e.Button == -1 {
+		// 				(*d.mouseWheelCallback)(1, int(e.X), int(e.Y))
+		// 			} else if e.Button == -2 {
+		// 				(*d.mouseWheelCallback)(-1, int(e.X), int(e.Y))
+		// 			}
+		// 		}
+		// 	case mouse.DirNone:
+		// 		if d.mouseMoveCallback != nil {
+		// 			(*d.mouseMoveCallback)(int(e.X), int(e.Y))
+		// 		}
+		// 	}
 		//case paint.Event:
 		// if d.renderCallback != nil {
 		// 	(*d.renderCallback)()
@@ -362,8 +362,8 @@ func (d *Drawlib) eventLoop() {
 			// if d.sizeCallback != nil {
 			// 	(*d.sizeCallback)(size.X, size.Y)
 			// }
-		case updateEvent:
-			d.swapbuffer()
+		// case updateEvent:
+		// 	d.swapbuffer()
 		case error:
 			log.Print(e)
 		}
