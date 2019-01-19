@@ -219,9 +219,9 @@ func (d *Drawlib) Start() {
 			for {
 				tickerC = ticker.C
 				select {
-				// case <-d.quit:
-				//ticker.Stop()
-				// 	break
+				case <-d.quit:
+					ticker.Stop()
+					break
 				case <-tickerC:
 					if d.keyIsPressCallback != nil {
 						if d.keyIsPress {
@@ -275,6 +275,7 @@ func (d *Drawlib) eventLoop() {
 		case key.Event:
 			if d.defaultCloseOperation {
 				if e.Code == key.CodeEscape {
+					d.quit <- true
 					return
 				}
 			}
@@ -324,7 +325,7 @@ func (d *Drawlib) eventLoop() {
 			if d.renderCallback != nil {
 				(*d.renderCallback)()
 			}
-			d.swapbuffer()
+			//d.swapbuffer()
 			d.mutex.Unlock()
 		case size.Event:
 			size := e.Size()
@@ -376,10 +377,10 @@ func (d *Drawlib) eventLoop() {
 				(*d.sizeCallback)(size.X, size.Y)
 			}
 			d.mutex.Unlock()
-		// case updateEvent:
-		// 	d.mutex.Lock()
-		// 	d.swapbuffer()
-		// 	d.mutex.Unlock()
+		case updateEvent:
+			d.mutex.Lock()
+			d.swapbuffer()
+			d.mutex.Unlock()
 		case error:
 			log.Print(e)
 		}
