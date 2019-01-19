@@ -375,10 +375,10 @@ func (d *Drawlib) eventLoop() {
 				(*d.sizeCallback)(size.X, size.Y)
 			}
 			d.mutex.Unlock()
-		case updateEvent:
-			d.mutex.Lock()
-			d.swapbuffer()
-			d.mutex.Unlock()
+		// case updateEvent:
+		// 	d.mutex.Lock()
+		// 	d.swapbuffer()
+		// 	d.mutex.Unlock()
 		case error:
 			log.Print(e)
 		}
