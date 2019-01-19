@@ -5,7 +5,6 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
-	"os"
 	"runtime"
 	"sync"
 	"time"
@@ -382,7 +381,8 @@ func (d *Drawlib) eventLoop() {
 	}
 
 	runtime.UnlockOSThread()
-	os.Exit(0)
+	runtime.Goexit()
+	//os.Exit(0)
 }
 
 func (d *Drawlib) swapbuffer() {
