@@ -1,12 +1,10 @@
 package drawlib
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"log"
-	"os"
 	"sync"
 	"time"
 
@@ -192,72 +190,64 @@ func (d *Drawlib) Start() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("create")
-		w.Release()
-		fmt.Println("delete")
+		//w.Release()
 		//runtime.UnlockOSThread()
-		os.Exit(0)
+		//os.Exit(0)
 		//runtime.Goexit()
 		// syscall.Exit(0)
 		// defer w.Release()
-		// d.mutex = &sync.Mutex{}
-		// d.screen = s
-		// d.window = w
-		// d.rect = image.Rect(0, 0, d.options.Width, d.options.Height)
+		d.mutex = &sync.Mutex{}
+		d.screen = s
+		d.window = w
+		d.rect = image.Rect(0, 0, d.options.Width, d.options.Height)
 
-		// d.buffer, err = s.NewBuffer(image.Point{d.options.Width, d.options.Height})
-		// if err != nil {
-		// 	panic(err)
-		// }
+		d.buffer, err = s.NewBuffer(image.Point{d.options.Width, d.options.Height})
+		if err != nil {
+			panic(err)
+		}
 
-		// d.texture, err = d.screen.NewTexture(d.buffer.Bounds().Max)
-		// if err != nil {
-		// 	panic(err)
-		// }
+		d.texture, err = d.screen.NewTexture(d.buffer.Bounds().Max)
+		if err != nil {
+			panic(err)
+		}
 
-		// if d.initCallback != nil {
-		// 	(*d.initCallback)()
-		// }
+		if d.initCallback != nil {
+			(*d.initCallback)()
+		}
 
-		// go func() {
-		// 	//runtime.LockOSThread()
-		// 	ticker := time.NewTicker(tickDuration)
-		// 	timeStart := time.Now().UnixNano()
-		// 	var tickerC <-chan time.Time
-		// 	for {
-		// 		tickerC = ticker.C
-		// 		select {
-		// 		// case <-d.quit:
-		// 		//ticker.Stop()
-		// 		// 	break
-		// 		case <-tickerC:
-		// 			if d.keyIsPressCallback != nil {
-		// 				if d.keyIsPress {
-		// 					(*d.keyIsPressCallback)(d.keyIsPressCode)
-		// 				}
-		// 			}
-		// 			if d.mouseIsPressCallback != nil {
-		// 				if d.mouseIsPress {
-		// 					(*d.mouseIsPressCallback)(d.mouseIsPressButton, d.mouseIsPressX, d.mouseIsPressY)
-		// 				}
-		// 			}
-		// 			now := time.Now().UnixNano()
-		// 			delta := float64(now-timeStart) / 1000000000
-		// 			timeStart = now
-		// 			if d.renderLoopCallback != nil {
-		// 				(*d.renderLoopCallback)(delta)
-		// 			}
-		// 			w.Send(updateEvent{})
-		// 		}
-		// 	}
-		// }()
-		//d.eventLoop()
-
-		// d.window.Release()
-		// //runtime.UnlockOSThread()
-		// // os.Exit(0)
-		// //runtime.Goexit()
-		// syscall.Exit(0)
+		go func() {
+			//runtime.LockOSThread()
+			ticker := time.NewTicker(tickDuration)
+			timeStart := time.Now().UnixNano()
+			var tickerC <-chan time.Time
+			for {
+				tickerC = ticker.C
+				select {
+				// case <-d.quit:
+				//ticker.Stop()
+				// 	break
+				case <-tickerC:
+					if d.keyIsPressCallback != nil {
+						if d.keyIsPress {
+							(*d.keyIsPressCallback)(d.keyIsPressCode)
+						}
+					}
+					if d.mouseIsPressCallback != nil {
+						if d.mouseIsPress {
+							(*d.mouseIsPressCallback)(d.mouseIsPressButton, d.mouseIsPressX, d.mouseIsPressY)
+						}
+					}
+					now := time.Now().UnixNano()
+					delta := float64(now-timeStart) / 1000000000
+					timeStart = now
+					if d.renderLoopCallback != nil {
+						(*d.renderLoopCallback)(delta)
+					}
+					w.Send(updateEvent{})
+				}
+			}
+		}()
+		d.eventLoop()
 	})
 }
 
@@ -275,16 +265,8 @@ func (d *Drawlib) eventLoop() {
 				if d.closeCallback != nil {
 					(*d.closeCallback)()
 				}
-				//syscall.Exit(0)
-				//d.quit <- true
-				//runtime.UnlockOSThread()
-				//d.window.Release()
-				//break
-				// runtime.UnlockOSThread()
 				d.window.Release()
-				//runtime.Goexit()
-
-				break
+				return
 			case lifecycle.StageFocused:
 				if d.visibleCallback != nil {
 					(*d.visibleCallback)()
@@ -400,10 +382,6 @@ func (d *Drawlib) eventLoop() {
 			log.Print(e)
 		}
 	}
-
-	// runtime.UnlockOSThread()
-	// runtime.Goexit()
-	//os.Exit(0)
 }
 
 func (d *Drawlib) swapbuffer() {
